@@ -31,7 +31,7 @@ runs:
           uses: actions/download-artifact@v2
           with:
               name: ${{ inputs.artifact-name }}
-              path: ./downloaded
+              path: downloaded/
 
         - name: "Login to Azure"
           uses: azure/login@v1
@@ -46,14 +46,13 @@ runs:
 
         - name: "Upload to Fusion Portal"
           shell: bash
-          working-directory: ./downloaded
           run: |
               curl -X POST \
               -i \
               -f \
               -H "Content-Type: application/zip" \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-              --data-binary @${{ inputs.artifact-name }} \
+              --data-binary @downloaded/${{ inputs.artifact-name }} \
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
         - name: "Publish in Fusion Portal"
