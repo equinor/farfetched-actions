@@ -13,7 +13,6 @@ on:
                 description: "Optional - determines if the deployed artifact should immediately be published or not. Default true."
                 required: false
                 default: true
-        secrets:
             azure-tenant-id:
                 description: "Id of the Azure tenant"
                 required: true
@@ -24,36 +23,35 @@ on:
                 description: "Id of the resource group for deployment"
                 required: true
 
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Download artifact"
-              uses: actions/download-artifact@v2
+runs:
+    using: "composite"
+    steps:
+        - name: "Download artifact"
+          uses: actions/download-artifact@v2
 
-            - name: "Login to Azure"
-              uses: azure/login@v1
-              with:
-                  client-id: ${{ secrets.azure-client-id }}
-                  tenant-id: ${{ secrets.azure-tenant-id }}
-                  allow-no-subscriptions: true
+        - name: "Login to Azure"
+          uses: azure/login@v1
+          with:
+              client-id: ${{ inputs.azure-client-id }}
+              tenant-id: ${{ inputs.azure-tenant-id }}
+              allow-no-subscriptions: true
 
-            - name: "Obtain token for upload"
-              run: echo "FUSION_TOKEN=$(az account get-access-token --resource '${{ secrets.azure-resource-id }}' | jq '.accessToken')" >> $GITHUB_ENV
+        - name: "Obtain token for upload"
+          run: echo "FUSION_TOKEN=$(az account get-access-token --resource '${{ inputs.azure-resource-id }}' | jq '.accessToken')" >> $GITHUB_ENV
 
-            - name: "Upload to Fusion Portal"
-              run: |
-                  curl -X POST \
-                  -i \
-                  -H "Content-Type: application/zip" \
-                  -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-                  --data-binary @out/${{ inputs.app-key }}.zip \
-                  "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
+        - name: "Upload to Fusion Portal"
+          run: |
+              curl -X POST \
+              -i \
+              -H "Content-Type: application/zip" \
+              -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
+              --data-binary @out/${{ inputs.app-key }}.zip \
+              "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
-            - name: "Publish in Fusion Portal"
-              if: ${{ inputs.publish }}
-              run: |
-                  curl -X POST \
-                  -i \
-                  -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-                  "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
+        - name: "Publish in Fusion Portal"
+          if: ${{ inputs.publish }}
+          run: |
+              curl -X POST \
+              -i \
+              -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
+              "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
