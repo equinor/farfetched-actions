@@ -47,7 +47,7 @@ runs:
         - name: "Upload to Fusion Portal"
           shell: bash
           run: |
-              curl -X POST \
+              pwd && curl -X POST \
               -i \
               -f \
               -H "Content-Type: application/zip" \
