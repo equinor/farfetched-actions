@@ -1,27 +1,25 @@
 name: "Deploy to Fusion Portal"
 description: "This action will deploy to the Fusion Portal, using the provided SP and Fusion environment"
-on:
-    workflow_call:
-        inputs:
-            fusion-portal-url:
-                description: "Url to the endpoint for deployment and publishing"
-                required: true
-            app-key:
-                description: "The AppKey, as used in the Fusion Portal, of the application"
-                required: true
-            publish:
-                description: "Optional - determines if the deployed artifact should immediately be published or not. Default true."
-                required: false
-                default: true
-            azure-tenant-id:
-                description: "Id of the Azure tenant"
-                required: true
-            azure-client-id:
-                description: "Id of the Service Principal in Azure"
-                required: true
-            azure-resource-id:
-                description: "Id of the resource group for deployment"
-                required: true
+inputs:
+    fusion-portal-url:
+        description: "Url to the endpoint for deployment and publishing"
+        required: true
+    app-key:
+        description: "The AppKey, as used in the Fusion Portal, of the application"
+        required: true
+    publish:
+        description: "Optional - determines if the deployed artifact should immediately be published or not. Default true."
+        required: false
+        default: true
+    azure-tenant-id:
+        description: "Id of the Azure tenant"
+        required: true
+    azure-client-id:
+        description: "Id of the Service Principal in Azure"
+        required: true
+    azure-resource-id:
+        description: "Id of the resource group for deployment"
+        required: true
 
 runs:
     using: "composite"
