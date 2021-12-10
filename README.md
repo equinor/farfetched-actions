@@ -14,8 +14,6 @@ URL to the Portal where the artifact should be deployed.
 The AppKey (name of the package), as used within the Fusion Portal.
 * **publish** (optional)
 Set if the artifact should immediately be published in the Portal or not. Default true.
-
-_secrets_:
 * **azure-tenant-id**
 The Azure Tenant ID of the ServicePrincipal (Application registration) which is setup with the proper Federated Credentials.
 * **azure-client-id**
