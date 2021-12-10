@@ -43,7 +43,7 @@ runs:
           run: |
               curl -X POST \
               -i \
-              --fail-with-body \
+              -f \
               -H "Content-Type: application/zip" \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
               --data-binary @${{ inputs.app-key }}.zip \
@@ -55,6 +55,6 @@ runs:
           run: |
               curl -X POST \
               -i \
-              --fail-with-body \
+              -f \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
