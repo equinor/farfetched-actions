@@ -48,7 +48,7 @@ jobs:
                   -H "Content-Type: application/zip" \
                   -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
                   --data-binary @out/${{ inputs.app-key }}.zip \
-                  "${{ inputs.fusion-portal-url }}/api/apps/${{ secrets.app-key }}/versions"
+                  "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
             - name: "Publish in Fusion Portal"
               if: ${{ inputs.publish }}
@@ -56,4 +56,4 @@ jobs:
                   curl -X POST \
                   -i \
                   -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-                  "${{ inputs.fusion-portal-url }}/api/apps/${{ secrets.app-key }}/publish"
+                  "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
