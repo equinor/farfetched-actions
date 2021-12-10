@@ -1,0 +1,17 @@
+name: Pull Request
+on:
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+jobs:
+    code_style_issues:
+        name: Code style issues
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "lts/*"
+            - name: Find code style issues
+              run: npx prettier --check .
