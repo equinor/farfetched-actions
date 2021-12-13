@@ -61,5 +61,6 @@ runs:
               curl -X POST \
               -i \
               -f \
+              -H "Content-Length: 0" \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
