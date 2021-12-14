@@ -7,8 +7,8 @@ inputs:
     app-key:
         description: "The AppKey, as used in the Fusion Portal, of the application."
         required: true
-    artifact-name:
-        description: "The name of the artifact has been created (can be downloaded) and that should be uploaded to the Fusion Portal."
+    artifact-path:
+        description: "The path and name of the artifact that should be uploaded to the Fusion Portal."
         required: true
     publish:
         description: "Optional - determines if the deployed artifact should immediately be published or not. Default true."
@@ -27,11 +27,6 @@ inputs:
 runs:
     using: "composite"
     steps:
-        - name: "Download artifact"
-          uses: actions/download-artifact@v2
-          with:
-              name: ${{ inputs.artifact-name }}
-
         - name: "Login to Azure"
           uses: azure/login@v1
           with:
@@ -51,7 +46,7 @@ runs:
               -f \
               -H "Content-Type: application/zip" \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-              --data-binary @${{ inputs.app-key }}.zip \
+              --data-binary @${{ inputs.artifact-path }} \
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
         - name: "Publish in Fusion Portal"
