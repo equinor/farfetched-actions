@@ -50,7 +50,7 @@ runs:
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
         - name: "Publish in Fusion Portal"
-          if: ${{ inputs.publish }}
+          if: ${{ inputs.publish == true }}
           shell: bash
           run: |
               curl -X POST \
