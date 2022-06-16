@@ -1,4 +1,5 @@
 name: "Deploy to Fusion Portal"
+author: "Arne Kristian Jansen"
 description: "This action will deploy to the Fusion Portal, using the provided SP and Fusion environment"
 inputs:
     fusion-portal-url:
@@ -50,12 +51,16 @@ runs:
               "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/versions"
 
         - name: "Publish in Fusion Portal"
-          if: ${{ inputs.publish == true }}
           shell: bash
           run: |
-              curl -X POST \
-              -i \
-              -f \
-              -H "Content-Length: 0" \
-              -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-              "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
+              if ${{ inputs.publish == true }}; then
+                curl -X POST \
+                -i \
+                -f \
+                -H "Content-Length: 0" \
+                -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
+                "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
+              else
+                echo "Publish is set to false, not publishing."        
+              fi
+
