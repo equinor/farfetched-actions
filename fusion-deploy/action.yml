@@ -53,7 +53,7 @@ runs:
         - name: "Publish in Fusion Portal"
           shell: bash
           run: |
-              if ${{ inputs.publish == true }} == 'true'; then
+              if ${{ inputs.publish == 'true' }} == 'true'; then
                 curl -X POST \
                 -i \
                 -f \
