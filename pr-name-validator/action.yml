@@ -7,7 +7,7 @@ inputs:
         required: true
 
 env:
-    PR_LABEL: "invalid_PR_title"
+    PR_LABEL: "invalid_PR_name"
     # Needed for the "gh" commands to work
     GITHUB_TOKEN: ${{ inputs.github-token }}
 
