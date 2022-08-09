@@ -50,11 +50,14 @@ Example (`deploy` here is a _job_ in a GitHub workflow)
 This action validates the PR name in accordance to the Farfetched "rules", which again are based on (Conventional Commit)[https://www.conventionalcommits.org/en/v1.0.0/].
 If the name/title of the PR is not in accordance to the Conventional Commit standard (with possible additional restrictions added by the
 Farfetched team), the action will "fail".
-In case of failure the PR will be labeled with `invalid_PR_name`.
+In case of failure the PR will be labeled with `invalid_PR_name` (default, can be overridden).
 
 _Parameters:_
 * **github-token** (mandatory)
 The GitHub token, needed for internal `gh` operations (e.g. labeling the PR). Typically obtained through `${{ secrets.GITHUB_TOKEN }}`.
+* **failed-pr-label** (optional)
+The label to "stamp" on the PR if validation fails. Default: `invalid_PR_name`.
+
 
 Example
 ```

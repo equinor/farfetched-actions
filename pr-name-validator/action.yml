@@ -6,9 +6,10 @@ inputs:
         description: "The GitHub token to use for authentication."
         required: true
 
-env:
-    PR_LABEL: "invalid_PR_name"
-    # Needed for the "gh" commands to work
+    failed-pr-label:
+        description: "The label to apply to the PR if it fails the validation."
+        required: false
+        default: "invalid_PR_name"
 
 runs:
     using: "composite"
@@ -25,7 +26,7 @@ runs:
           shell: bash
           env:
               GITHUB_TOKEN: ${{ inputs.github-token }}
-          run: gh label create ${{ env.PR_LABEL }}
+          run: gh label create ${{ inputs.failed-pr-label }}
 
         # For full configuration capabilities of the linter, see: https://github.com/marketplace/actions/semantic-pull-request
         - name: Lint pull request title
@@ -37,11 +38,11 @@ runs:
           shell: bash
           env:
               GITHUB_TOKEN: ${{ inputs.github-token }}
-          run: gh pr edit --remove-label ${{ env.PR_LABEL }}
+          run: gh pr edit --remove-label ${{ inputs.failed-pr-label }}
 
         - name: Add label
           if: ${{ failure() }}
           shell: bash
           env:
               GITHUB_TOKEN: ${{ inputs.github-token }}
-          run: gh pr edit --add-label ${{ env.PR_LABEL }}
+          run: gh pr edit --add-label ${{ inputs.failed-pr-label }}
