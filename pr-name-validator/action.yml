@@ -1,0 +1,36 @@
+name: 🔍️ PR Name Validation
+author: "Andreas Dukstad & Arne Kristian Jansen"
+description: "This action will validate the name of a PR, ensuring it follows the expected naming rules."
+inputs:
+    github-token:
+        description: "The GitHub token to use for authentication."
+        required: true
+
+env:
+    PR_LABEL: "invalid_PR_title"
+    # Needed for the "gh" commands to work
+    GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+runs:
+    using: "composite"
+    steps:
+        - uses: actions/checkout@v2
+        - name: Checkout current PR
+          run: gh pr checkout $GITHUB_HEAD_REF
+
+        - name: Create Label (if not exists)
+          continue-on-error: true
+          run: gh label create ${{ env.PR_LABEL }}
+
+        # For full configuration capabilities of the linter, see: https://github.com/marketplace/actions/semantic-pull-request
+        - name: Lint pull request title
+          uses: amannn/action-semantic-pull-request@91682d013dea3ff257520b9b68c9cb93ced4fe9b # The SHA refers to v4.5
+          env:
+              GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+
+        - name: Remove label
+          run: gh pr edit --remove-label ${{ env.PR_LABEL }}
+
+        - name: Add label
+          if: ${{ failure() }}
+          run: gh pr edit --add-label ${{ env.PR_LABEL }}
