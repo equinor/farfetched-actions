@@ -21,7 +21,7 @@ The Azure Tenant ID of the ServicePrincipal (Application registration) which is 
 * **azure-client-id**
 The Client ID of the ServicePrincipal.
 * **azure-resource-id**
-The Resource Group ID where the artifact should be deployed to.
+The Resource ID where the artifact should be deployed to. Note that this doesn't have anything to do with resource groups, but the app registration that hosts the desired environment (CI/QA or PROD). For CI/QA it is most likely `5a842df8-3238-415d-b168-9f16a6a6031b` and for PROD it is most likely `97978493-9777-4d48-b38a-67b0b9cd88d2`.
 
 Example (`deploy` here is a _job_ in a GitHub workflow)
 ```
