@@ -68,7 +68,7 @@ runs:
                 -f \
                 -H "Content-Length: 0" \
                 -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
-                "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
+                "${{ inputs.fusion-portal-url }}/bundles/apps/${{ inputs.app-key }}/publish"
               else
                 echo "Publish is set to false, not publishing."        
               fi
