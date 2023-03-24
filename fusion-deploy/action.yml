@@ -28,6 +28,15 @@ inputs:
 runs:
     using: "composite"
     steps:
+        - name: "Clarify inputs"
+          shell: bash
+          run: |
+               echo "Using AZURE_CLIENT_ID: ${{ inputs.azure-client-id }}" | sed -r 's/(.{0})(.{30})$/\1***/'
+               echo "Using AZURE_TENANT_ID: ${{ inputs.azure-tenant-id }}" | sed -r 's/(.{0})(.{30})$/\1***/'
+               echo "Using AZURE_RESOURCE_ID: ${{ inputs.azure-resource-id }}" | sed -r 's/(.{0})(.{30})$/\1***/'
+               echo "Using Fusion Portal URL: ${{ inputs.fusion-portal-url }}" | sed -r 's/(.{0})(.{1})$/\1***/'
+               echo "Using Fusion App Key: ${{ inputs.app-key }}"
+                
         - name: "Login to Azure"
           uses: azure/login@v1
           with:
