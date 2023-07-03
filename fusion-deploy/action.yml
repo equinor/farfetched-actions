@@ -53,7 +53,7 @@ runs:
           run: |
               curl -X POST \
               -i \
-              -f \
+              --fail-with-body \
               -H "Content-Type: application/zip" \
               -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
               --data-binary @${{ inputs.artifact-path }} \
@@ -65,7 +65,7 @@ runs:
               if ${{ inputs.publish == 'true' }} == 'true'; then
                 curl -X POST \
                 -i \
-                -f \
+                --fail-with-body \
                 -H "Content-Length: 0" \
                 -H "Authorization: Bearer ${{ env.FUSION_TOKEN }}" \
                 "${{ inputs.fusion-portal-url }}/api/apps/${{ inputs.app-key }}/publish"
