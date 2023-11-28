@@ -9,7 +9,7 @@ The workflow will login into Azure using the given ServicePrincipal, obtain a To
 
 _Parameters:_
 * **fusion-portal-url** (mandatory)
-URL to the Portal where the artifact should be deployed.
+URL to the Portal where the artifact should be deployed. E.g. `https://fusion-s-portal-{env}.azurewebsites.net/`. For CI it is `https://fusion-s-portal-ci.azurewebsites.net/`
 * **app-key** (mandatory)
 The AppKey (name of the package), as used within the Fusion Portal.
 * **artifact-path** (mandatory)
