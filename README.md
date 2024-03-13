@@ -1,6 +1,7 @@
 # Farfetched Actions
 This repository contains reusable GitHub Actions and Workflows.
-Although developed for the Farfetche'd team, there is no restrictions in the actions to not be used by other teams.
+
+Although developed for the Equinor Farfetch'd team, there are no restrictions in the actions preventing them from being used by other teams.
 
 ## Workflows
 ### Fusion Deploy
