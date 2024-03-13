@@ -1,7 +1,9 @@
+[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/farfetched-actions/badge)](https://scm-compliance-api.radix.equinor.com/repos/equinor/farfetched-actions/badge)
+
 # Farfetched Actions
 This repository contains reusable GitHub Actions and Workflows.
 
-Although developed for the Equinor Farfetch'd team, there are no restrictions in the actions preventing them from being used by other teams.
+Although originally developed for the Equinor Farfetch'd team, there are no restrictions in the actions preventing them from being used by other teams.
 
 ## Workflows
 ### Fusion Deploy
