@@ -1,0 +1,21 @@
+name: "Update Yarn"
+description: "Update Yarn to the latest version in package.json"
+runs:
+    using: "composite"
+    steps:
+        - name: Check out repository
+          uses: actions/checkout@v4
+
+        - name: Install jq
+          run: sudo apt-get install jq
+          shell: bash
+
+        - name: Enable Corepack
+          run: corepack enable
+          shell: bash
+
+        - name: Update Yarn to the latest version
+          env:
+              GH_TOKEN: ${{ github.token }}
+          run: bash ${{ github.action_path }}/update-yarn.sh
+          shell: bash
