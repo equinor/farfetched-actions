@@ -8,8 +8,8 @@ RESET='\033[0m' # No Color
 LABEL_NAME="yarn-update"
 
 # Create label if it doesn't exist
-if ! gh label list | grep --quiet "LABEL_NAME"; then
-  gh label create "LABEL_NAME" --color "ededed" --description "A pull request created to update the Yarn package manager version."
+if ! gh label list | grep --quiet "$LABEL_NAME"; then
+  gh label create "$LABEL_NAME" --color "ededed" --description "A pull request created to update the Yarn package manager version."
 fi
 
 # Ensure pull request doesn't exist
