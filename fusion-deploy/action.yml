@@ -1,6 +1,6 @@
 name: "Deploy to Fusion Portal"
 author: "Arne Kristian Jansen"
-description: "This action will deploy to the Fusion Portal, using the provided SP and Fusion environment"
+description: "DEPRECATED! Fusion will remove the old project portal used by this action in the near future. Use the new app service instead: https://github.com/equinor/fusion/issues/428"
 inputs:
     fusion-portal-url:
         description: "Url to the endpoint for deployment and publishing."
