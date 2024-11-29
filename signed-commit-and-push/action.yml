@@ -1,47 +1,44 @@
 name: "Commit and push changes with signed commit"
-description: "This action commits and pushes changes to a specified file with a signed commit message."
-inputs:
-    file-to-commit:
-        description: "The file path of the file to commit and push changes."
-        type: string
-        required: true
-    commit-message:
-        description: "The commit message to describe the changes made to the file."
-        type: string
-        required: true
-    branch:
-        description: "The name of the branch to commit the file to."
-        type: string
-        required: true
-    repo:
-        description: "The name of the repository."
-        type: string
-        required: true
+description: "This action commits and pushes changes to a specified file with a signed commit message." 
+inputs: 
+  file-to-commit:
+    description: "The file path of the file to commit and push changes."
+    type: string
+    required: true
+  commit-message:
+    description: "The commit message to describe the changes made to the file."
+    type: string
+    required: true
+  branch:
+    description: "The name of the branch to commit the file to."
+    type: string
+    required: true
+  repo:
+    description: "The name of the repository."
+    type: string
+    required: true
 
-runs:
-    using: "composite"
-    steps:
-        - name: Commit and push if changes
-          shell: bash
-          env:
-              GH_TOKEN: ${{ github.token }}
-              FILE_TO_COMMIT: ${{ inputs.file-to-commit }}
-              COMMIT_MESSAGE: ${{ inputs.commit-message }}
-              BRANCH: ${{ inputs.branch }}
-              REPO: ${{ inputs.repo }}
-          run: |
-              git config --local user.email "github-actions[bot]@users.noreply.github.com"
-              git config --local user.name "Farfetch'd Actions Bot"
-              git add "$FILE_TO_COMMIT"
-              if git diff --staged --quiet; then
-                echo "No changes to commit"
-              else
-                export SHA=$(git rev-parse HEAD:$FILE_TO_COMMIT)
-                export CONTENT=$(base64 -i $FILE_TO_COMMIT)
-                gh api --method PUT "/repos/$REPO/contents/$FILE_TO_COMMIT" \
-                  --field message="$COMMIT_MESSAGE" \
-                  --field content="$CONTENT" \
-                  --field encoding="base64" \
-                  --field branch="$BRANCH" \
-                  --field sha="$SHA"
-                fi
+runs: 
+  using: "composite"
+  steps: 
+    - name: Commit and push if changes
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        FILE_TO_COMMIT=${{inputs.file-to-commit}}
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "Farfetch'd Actions Bot"
+        git add "$FILE_TO_COMMIT"
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          export SHA=$(git rev-parse HEAD:$FILE_TO_COMMIT)
+          export CONTENT=$(base64 -i $FILE_TO_COMMIT)
+          gh api --method PUT "/repos/${{inputs.repo}}/contents/$FILE_TO_COMMIT" \
+            --field message="${{inputs.commit-message}}" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="${{inputs.branch}}" \
+            --field sha="$SHA"
+          fi
