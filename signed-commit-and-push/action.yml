@@ -26,7 +26,6 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        FILE_TO_COMMIT=${{inputs.file-to-commit}}
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "Farfetch'd Actions Bot"
         git add "$FILE_TO_COMMIT"
