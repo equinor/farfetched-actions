@@ -38,6 +38,6 @@ runs:
             --field message="$COMMIT_MESSAGE" \
             --field content="$CONTENT" \
             --field encoding="base64" \
-            --field branch="$BRANCH" \
+            --field branch="$BRANCH_NAME" \
             --field sha="$SHA"
           fi
