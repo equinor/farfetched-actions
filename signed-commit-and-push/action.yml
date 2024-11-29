@@ -25,7 +25,6 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
-        BRANCH: ${{ github.head_ref }}
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "Farfetch'd Actions Bot"
@@ -36,7 +35,7 @@ runs:
           export SHA=$(git rev-parse HEAD:$FILE_TO_COMMIT)
           export CONTENT=$(base64 -i $FILE_TO_COMMIT)
           gh api --method PUT "/repos/$REPO/contents/$FILE_TO_COMMIT" \
-            --field message="${{inputs.commit-message}}" \
+            --field message="$COMMIT_MESSAGE" \
             --field content="$CONTENT" \
             --field encoding="base64" \
             --field branch="$BRANCH" \
