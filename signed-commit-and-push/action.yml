@@ -1,8 +1,8 @@
 name: "Commit and push changes with signed commit"
-description: "This action commits and pushes changes to a specified file with a signed commit message."
+description: "This action commits and pushes changes to a specified file with a signed commit."
 inputs:
     file-to-commit:
-        description: "The file path of the file to commit and push changes."
+        description: "The file path of the file to commit."
         type: string
         required: true
     commit-message:
@@ -10,7 +10,7 @@ inputs:
         type: string
         required: true
     branch:
-        description: "The name of the branch to commit the file to."
+        description: "The name of the branch to commit to."
         type: string
         required: true
     repo:
@@ -25,10 +25,10 @@ runs:
           shell: bash
           env:
               GH_TOKEN: ${{ github.token }}
-              BRANCH: ${{inputs.branch}}
-              FILE_TO_COMMIT: ${{inputs.file-to-commit}}
-              REPO: ${{inputs.repo}}
-              COMMIT_MESSAGE: ${{inputs.commit-message}}
+              BRANCH: ${{ inputs.branch }}
+              FILE_TO_COMMIT: ${{ inputs.file-to-commit }}
+              REPO: ${{ inputs.repo }}
+              COMMIT_MESSAGE: ${{ inputs.commit-message }}
           run: |
               git config --local user.email "github-actions[bot]@users.noreply.github.com"
               git config --local user.name "Farfetch'd Actions Bot"
