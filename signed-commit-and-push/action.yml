@@ -1,10 +1,22 @@
 name: "Commit and push changes with signed commit"
-description: "This action commits and pushes changes to a specified file with a signed commit message. The caller needs to set the following environment variables: FILE_TO_COMMIT, COMMIT_MESSAGE, and REPO."
+description: "This action commits and pushes changes to a specified file with a signed commit message." 
 inputs:
-    branch:
-        description: "The name of the branch to commit the file to."
-        type: string
-        required: true
+  file-to-commit:
+    description: "The file path of the file to commit and push changes."
+    type: string
+    required: true
+  commit-message:
+    description: "The commit message to describe the changes made to the file."
+    type: string
+    required: true
+  branch:
+    description: "The name of the branch to commit the file to."
+    type: string
+    required: true
+  repo:
+    description: "The name of the repository."
+    type: string
+    required: true
 
 runs:
     using: "composite"
@@ -14,6 +26,9 @@ runs:
           env:
               GH_TOKEN: ${{ github.token }}
               BRANCH: ${{inputs.branch}}
+              FILE_TO_COMMIT: ${{inputs.file-to-commit}}
+              REPO: ${{inputs.repo}}
+              COMMIT_MESSAGE: ${{inputs.commit-message}}
           run: |
               git config --local user.email "github-actions[bot]@users.noreply.github.com"
               git config --local user.name "Farfetch'd Actions Bot"
