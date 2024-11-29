@@ -28,7 +28,7 @@ runs:
               FILE_TO_COMMIT: ${{ inputs.file-to-commit }}
               COMMIT_MESSAGE: ${{ inputs.commit-message }}
               BRANCH: ${{ inputs.branch }}
-              REPO: ${{inputs.repo}}
+              REPO: ${{ inputs.repo }}
           run: |
               git config --local user.email "github-actions[bot]@users.noreply.github.com"
               git config --local user.name "Farfetch'd Actions Bot"
