@@ -1,0 +1,34 @@
+name: 🔍️ PR Validate conventional commit naming
+description: "This action validates the PR's commit messages to make sure they follow conventional commits."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Store PR_COMMIT_COUNT"
+          shell: bash
+          run: echo "PR_COMMIT_COUNT=${{ github.event.pull_request.commits }}" >> "${GITHUB_ENV}"
+        - name: Checkout repository
+          uses: actions/checkout@v3
+          with:
+              fetch-depth: $(( ${{ env.PR_COMMIT_COUNT }} + 1 ))
+        - name: Validate conventional commits
+          shell: bash
+          run: |
+              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build"
+
+              # There is a hidden merge commit at the top that we bypass. The second child is the topmost PR commit.
+              COMMIT_MESSAGES=$(git log origin/${{ github.event.pull_request.base.ref }}..HEAD^2 --pretty=format:'%s')
+
+              echo "Found the following commit messages:"
+              echo "$COMMIT_MESSAGES"
+              echo
+
+              # Validate each commit message
+              echo "$COMMIT_MESSAGES" | while IFS= read -r commit; do
+                if [[ ! $commit =~ ^($ALLOWED_PREFIXES)(\(.+\))?!?:.*$ ]]; then
+                  echo "Invalid commit message: $commit"
+                  exit 1
+                fi
+              done
+
+              echo "All commit messages follow the Conventional Commit format."
