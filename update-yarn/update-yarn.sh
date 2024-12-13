@@ -33,26 +33,4 @@ fi
 
 echo -e "The project is configured to use ${LIGHT_CYAN}'$PREVIOUS_YARN_VERSION'${RESET}. Yarn version has been set to ${LIGHT_CYAN}'$NEW_YARN_VERSION'${RESET}, the latest version."
 
-BRANCH_NAME="yarn-update-$NEW_YARN_VERSION"
-
-# Ensure branch doesn't exist
-if git ls-remote --heads origin "$BRANCH_NAME" | grep --quiet "$BRANCH_NAME"; then
-  echo -e "${RED}Branch '$BRANCH_NAME' already exists.${RESET}" >&2
-  exit 1
-fi
-
-# Commit and push changes
-git config --global user.name 'github-actions'
-git config --global user.email 'github-actions@github.com'
-
-git checkout -b "$BRANCH_NAME"
-
-git add package.json
-git commit -m "chore: update Yarn to '$NEW_YARN_VERSION'"
-git push -u origin "$BRANCH_NAME"
-
-# Create pull request
-gh pr create \
-    --title "chore: update Yarn to '$NEW_YARN_VERSION'" \
-    --body "This PR updates Yarn to '$NEW_YARN_VERSION', the latest release." \
-    --label "$LABEL_NAME"
+echo "{NEW_YARN_VERSION}={$NEW_YARN_VERSION}" >> "$GITHUB_OUTPUT"

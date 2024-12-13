@@ -15,7 +15,45 @@ runs:
           shell: bash
 
         - name: Update Yarn to the latest version
+          id: update-yarn
           env:
               GH_TOKEN: ${{ github.token }}
           run: bash ${{ github.action_path }}/update-yarn.sh
           shell: bash
+
+      - name: Create branch
+        if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+        shell: bash
+        env:
+          NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+        run: |
+
+            BRANCH_NAME="yarn-update-$NEW_YARN_VERSION"
+
+            if git ls-remote --heads origin "$BRANCH_NAME" | grep --quiet "$BRANCH_NAME"; then
+              echo -e "${RED}Branch '$BRANCH_NAME' already exists.${RESET}" >&2
+              exit 1
+            fi
+
+            git checkout -b "$BRANCH_NAME"
+            
+            echo "{BRANCH_EXISTS}={false}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push changes
+        if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+        uses:  ./signed-commit-and-push
+        with:
+          branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
+          commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
+          repo: ${{ github.repository }}
+          file-to-commit: "package.json"
+
+      - name: Create pull request
+        if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+        shell: bash
+        env: 
+          GH_TOKEN: ${{ github.token }}
+          LABEL_NAME: "yarn-update"
+          NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+        run: |
+            gh pr create -t "chore: update Yarn to '$NEW_YARN_VERSION'" -b "This PR updates Yarn to '$NEW_YARN_VERSION', the latest release." -l "$LABEL_NAME"
