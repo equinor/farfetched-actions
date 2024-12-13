@@ -1,5 +1,4 @@
 name: 🔍️ PR Name Validation
-author: "Andreas Dukstad & Arne Kristian Jansen"
 description: "This action will validate the name of a PR, ensuring it follows the expected naming rules."
 inputs:
     failed-pr-label:

@@ -1,5 +1,4 @@
 name: "Deploy to Fusion Portal"
-author: "Arne Kristian Jansen"
 description: "DEPRECATED! Fusion will remove the old project portal used by this action in the near future. Use the new app service instead: https://github.com/equinor/fusion/issues/428"
 inputs:
     fusion-portal-url:
