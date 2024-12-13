@@ -14,10 +14,31 @@ runs:
           run: corepack enable
           shell: bash
 
+        - name: Check if PR exists
+          shell: bash
+          id: check-pr-exists
+          run: |
+              LABEL_NAME="yarn-update"
+
+              # Create label if it doesn't exist
+              if ! gh label list | grep --quiet "$LABEL_NAME"; then
+                gh label create "$LABEL_NAME" --color "ededed" --description "A pull request created to update the Yarn package manager version."
+              fi
+
+              # Ensure pull request doesn't exist
+              EXISTING_YARN_PULL_REQUESTS=$(gh pr list --label "$LABEL_NAME" --state open)
+              if [ -z "$EXISTING_YARN_PULL_REQUESTS" ]; then
+                echo "No existing Yarn update PR found."
+                echo "{UPDATE_PR_ALREADY_EXISTS}={false}" >> "$GITHUB_OUTPUT"
+              else
+                echo "Existing Yarn update PR found. Skipping update."
+                echo "{UPDATE_PR_ALREADY_EXISTS}={true}" >> "$GITHUB_OUTPUT"
+                exit 0;
+              fi
+
         - name: Update Yarn to the latest version
+          if: ${{ success() && steps.check-pr-exists.outputs.UPDATE_PR_ALREADY_EXISTS != 'true' }}
           id: update-yarn
-          env:
-              GH_TOKEN: ${{ github.token }}
           run: bash ${{ github.action_path }}/update-yarn.sh
           shell: bash
 
@@ -27,7 +48,7 @@ runs:
           env:
             NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
           run: |
-
+              RED='\033[0;31m'
               BRANCH_NAME="yarn-update-$NEW_YARN_VERSION"
 
               if git ls-remote --heads origin "$BRANCH_NAME" | grep --quiet "$BRANCH_NAME"; then
