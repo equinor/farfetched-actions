@@ -17,8 +17,8 @@ runs:
         - name: Check if PR exists
           id: check-pr-exists
           shell: bash
-          env: 
-            GH_TOKEN: ${{ github.token }}
+          env:
+              GH_TOKEN: ${{ github.token }}
           run: |
               LABEL_NAME="yarn-update"
 
@@ -48,7 +48,7 @@ runs:
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
           shell: bash
           env:
-            NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+              NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
           run: |
               RED='\033[0;31m'
               BRANCH_NAME="yarn-update-$NEW_YARN_VERSION"
@@ -60,24 +60,24 @@ runs:
 
               git checkout -b "$BRANCH_NAME" || exit 1
               git push --set-upstream origin "$BRANCH_NAME"
-              
+
               echo "BRANCH_EXISTS=false" >> "$GITHUB_OUTPUT"
 
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
           uses: equinor/farfetched-actions/signed-commit-and-push@v2.8
           with:
-            branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
-            commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
-            repo: ${{ github.repository }}
-            file-to-commit: "package.json"
+              branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
+              commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
+              repo: ${{ github.repository }}
+              file-to-commit: "package.json"
 
         - name: Create pull request
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
           shell: bash
-          env: 
-            GH_TOKEN: ${{ github.token }}
-            LABEL_NAME: "yarn-update"
-            NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+          env:
+              GH_TOKEN: ${{ github.token }}
+              LABEL_NAME: "yarn-update"
+              NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
           run: |
               gh pr create -t "chore: update Yarn to '$NEW_YARN_VERSION'" -b "This PR updates Yarn to '$NEW_YARN_VERSION', the latest release." -l "$LABEL_NAME"
