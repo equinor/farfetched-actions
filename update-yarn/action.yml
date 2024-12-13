@@ -14,8 +14,68 @@ runs:
           run: corepack enable
           shell: bash
 
-        - name: Update Yarn to the latest version
+        - name: Check if PR exists
+          id: check-pr-exists
+          shell: bash
           env:
               GH_TOKEN: ${{ github.token }}
+          run: |
+              LABEL_NAME="yarn-update"
+
+              # Create label if it doesn't exist
+              if ! gh label list | grep --quiet "$LABEL_NAME"; then
+                gh label create "$LABEL_NAME" --color "ededed" --description "A pull request created to update the Yarn package manager version."
+              fi
+
+              # Ensure pull request doesn't exist
+              EXISTING_YARN_PULL_REQUESTS=$(gh pr list --label "$LABEL_NAME" --state open)
+              if [ -z "$EXISTING_YARN_PULL_REQUESTS" ]; then
+                echo "No existing Yarn update PR found."
+                echo "UPDATE_PR_ALREADY_EXISTS=false" >> "$GITHUB_OUTPUT"
+              else
+                echo "Existing Yarn update PR found. Skipping update."
+                echo "UPDATE_PR_ALREADY_EXISTS=true" >> "$GITHUB_OUTPUT"
+                exit 0;
+              fi
+
+        - name: Update Yarn to the latest version
+          if: ${{ success() && steps.check-pr-exists.outputs.UPDATE_PR_ALREADY_EXISTS == 'false' }}
+          id: update-yarn
           run: bash ${{ github.action_path }}/update-yarn.sh
           shell: bash
+
+        - name: Create branch
+          if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+          shell: bash
+          env:
+              NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+          run: |
+              RED='\033[0;31m'
+              BRANCH_NAME="yarn-update-$NEW_YARN_VERSION"
+
+              if git ls-remote --heads origin "$BRANCH_NAME" | grep --quiet "$BRANCH_NAME"; then
+                echo -e "${RED}Branch '$BRANCH_NAME' already exists.${RESET}" >&2
+                exit 1
+              fi
+
+              git checkout -b "$BRANCH_NAME" || exit 1
+              git push --set-upstream origin "$BRANCH_NAME"
+
+        - name: Commit and push changes
+          if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+          uses: equinor/farfetched-actions/signed-commit-and-push@main
+          with:
+              branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
+              commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
+              repo: ${{ github.repository }}
+              file-to-commit: "package.json"
+
+        - name: Create pull request
+          if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
+          shell: bash
+          env:
+              GH_TOKEN: ${{ github.token }}
+              LABEL_NAME: "yarn-update"
+              NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
+          run: |
+              gh pr create -t "chore: update Yarn to '$NEW_YARN_VERSION'" -b "This PR updates Yarn to '$NEW_YARN_VERSION', the latest release." -l "$LABEL_NAME"
