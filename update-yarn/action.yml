@@ -31,25 +31,18 @@ runs:
               EXISTING_YARN_PULL_REQUESTS=$(gh pr list --label "$LABEL_NAME" --state open)
               if [ -z "$EXISTING_YARN_PULL_REQUESTS" ]; then
                 echo "No existing Yarn update PR found."
-                echo "{UPDATE_PR_ALREADY_EXISTS}={false}" >> "$GITHUB_OUTPUT"
+                echo "UPDATE_PR_ALREADY_EXISTS=false" >> "$GITHUB_OUTPUT"
               else
                 echo "Existing Yarn update PR found. Skipping update."
-                echo "{UPDATE_PR_ALREADY_EXISTS}={true}" >> "$GITHUB_OUTPUT"
+                echo "UPDATE_PR_ALREADY_EXISTS=true" >> "$GITHUB_OUTPUT"
                 exit 0;
               fi
 
         - name: Update Yarn to the latest version
-          if: ${{ success() && steps.check-pr-exists.outputs.UPDATE_PR_ALREADY_EXISTS != 'true' }}
+          if: ${{ success() && steps.check-pr-exists.outputs.UPDATE_PR_ALREADY_EXISTS == 'false' }}
           id: update-yarn
           run: bash ${{ github.action_path }}/update-yarn.sh
           shell: bash
-
-        - name: Print
-          shell: bash
-          env:
-            NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
-          run: |
-              echo -e "New yarn version: $NEW_YARN_VERSION"
 
         - name: Create branch
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
@@ -68,7 +61,7 @@ runs:
               git checkout -b "$BRANCH_NAME" || exit 1
               git push --set-upstream origin "$BRANCH_NAME"
               
-              echo "{BRANCH_EXISTS}={false}" >> "$GITHUB_OUTPUT"
+              echo "BRANCH_EXISTS=false" >> "$GITHUB_OUTPUT"
 
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
