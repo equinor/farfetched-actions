@@ -71,7 +71,7 @@ runs:
 
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
-          uses:  ./signed-commit-and-push
+          uses: equinor/farfetched-actions/signed-commit-and-push@${{ github.action_ref }}
           with:
             branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
             commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
