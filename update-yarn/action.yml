@@ -44,8 +44,7 @@ runs:
           run: bash ${{ github.action_path }}/update-yarn.sh
           shell: bash
 
-        - name: Check if PR exists
-          id: check-pr-exists
+        - name: Print
           shell: bash
           env:
             NEW_YARN_VERSION: ${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}
