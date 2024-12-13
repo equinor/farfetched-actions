@@ -15,8 +15,10 @@ runs:
           shell: bash
 
         - name: Check if PR exists
-          shell: bash
           id: check-pr-exists
+          shell: bash
+          env: 
+            GH_TOKEN: ${{ github.token }}
           run: |
               LABEL_NAME="yarn-update"
 
