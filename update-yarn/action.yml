@@ -61,11 +61,9 @@ runs:
               git checkout -b "$BRANCH_NAME" || exit 1
               git push --set-upstream origin "$BRANCH_NAME"
 
-              echo "BRANCH_EXISTS=false" >> "$GITHUB_OUTPUT"
-
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
-          uses: equinor/farfetched-actions/signed-commit-and-push@v2.8
+          uses: equinor/farfetched-actions/signed-commit-and-push@main
           with:
               branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
               commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
