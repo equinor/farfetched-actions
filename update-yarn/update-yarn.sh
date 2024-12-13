@@ -16,4 +16,4 @@ fi
 
 echo -e "The project is configured to use ${LIGHT_CYAN}'$PREVIOUS_YARN_VERSION'${RESET}. Yarn version has been set to ${LIGHT_CYAN}'$NEW_YARN_VERSION'${RESET}, the latest version."
 
-echo "{NEW_YARN_VERSION}={$NEW_YARN_VERSION}" >> "$GITHUB_OUTPUT"
+echo "{NEW_YARN_VERSION}={$NEW_YARN_VERSION}" >> $GITHUB_OUTPUT
