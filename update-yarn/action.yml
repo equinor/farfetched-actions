@@ -65,7 +65,8 @@ runs:
                 exit 1
               fi
 
-              git checkout -b "$BRANCH_NAME"
+              git checkout -b "$BRANCH_NAME" || exit 1
+              git push --set-upstream origin "$BRANCH_NAME"
               
               echo "{BRANCH_EXISTS}={false}" >> "$GITHUB_OUTPUT"
 
