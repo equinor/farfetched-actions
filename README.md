@@ -5,6 +5,8 @@ This repository contains reusable GitHub Actions and Workflows.
 
 Although originally developed for the Equinor Farfetch'd team, there are no restrictions in the actions preventing them from being used by other teams.
 
+Be aware that we cannot make any guarantees for the software provided here. Use at your own risk.
+
 ## Workflows
 ### Fusion Deploy
 This workflow deploys the created artifact(s) in a workflow to the given Fusion Portal environment. It deploys "on behalf of" a Azure ServicePrincipal with Federated Credentials.
