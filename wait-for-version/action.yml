@@ -1,0 +1,31 @@
+name: "⏱️ Wait for Expected Version"
+description: "Ensures that an API is running the expected version. Typically for confirming that a deploy to QA/PROD went smoothly."
+inputs:
+    base-url:
+        description: "The base URL to access for a /version endpoint, e.g. 'http://localhost:5200' (without a trailing slash)"
+        required: true
+    expected-version:
+        description: "The expected version number, e.g. '14.0.0'. The action will wait for this version number to be returned from the server and fail if isn't returned within the defined max attempts"
+        required: true
+    max-attempts:
+        description: "The max number of attempts to try before giving up."
+        required: false
+        default: 300
+
+runs:
+    using: "composite"
+    steps:
+        - name: Check out repository
+          uses: actions/checkout@v4
+
+        - name: Install jq
+          run: sudo apt-get install jq
+          shell: bash
+
+        - name: Wait for Expected Version
+          run: bash ${{ github.action_path }}/wait-for-version.sh
+          shell: bash
+          env:
+              BASE_URL: ${{ inputs.base-url }}
+              EXPECTED_VERSION: ${{ inputs.expected-version }}
+              MAX_ATTEMPTS: ${{ inputs.max-attempts }}
