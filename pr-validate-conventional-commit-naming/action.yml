@@ -26,7 +26,8 @@ runs:
               # Validate each commit message
               echo "$COMMIT_MESSAGES" | while IFS= read -r commit; do
                 if [[ ! $commit =~ ^($ALLOWED_PREFIXES)(\(.+\))?!?:.*$ ]]; then
-                  echo "Invalid commit message: $commit"
+                  echo "A commit message is invalid: $commit"
+                  echo "It must follow the conventional commit format."
                   exit 1
                 fi
               done
