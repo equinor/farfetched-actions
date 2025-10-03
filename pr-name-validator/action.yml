@@ -1,43 +1,21 @@
-name: 🔍️ PR Name Validation
-description: "This action will validate the name of a PR, ensuring it follows the expected naming rules."
-inputs:
-    failed-pr-label:
-        description: "The label to apply to the PR if it fails the validation."
-        required: false
-        default: "invalid_PR_name"
+name: 🔍️ PR Title Validation
+description: "This action will validate the title of a PR, ensuring it follows the expected naming rules."
 
 runs:
     using: "composite"
     steps:
-        - uses: actions/checkout@v2
-        - name: Checkout current PR
+        - name: Validate that PR title follows Conventional Commit format
           shell: bash
-          env:
-              GITHUB_TOKEN: ${{ github.token }}
-          run: gh pr checkout ${{ github.head_ref }}
+          run: |
+              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build"
+              PR_TITLE="${{ github.event.pull_request.title }}"
 
-        - name: Create Label (if not exists)
-          continue-on-error: true
-          shell: bash
-          env:
-              GITHUB_TOKEN: ${{ github.token}}
-          run: gh label create ${{ inputs.failed-pr-label }}
+              echo "PR Title: $PR_TITLE"
 
-        # For full configuration capabilities of the linter, see: https://github.com/marketplace/actions/semantic-pull-request
-        - name: Lint pull request title
-          uses: amannn/action-semantic-pull-request@01d5fd8a8ebb9aafe902c40c53f0f4744f7381eb # The SHA refers to v5.0.2
-          env:
-              GITHUB_TOKEN: ${{ github.token }}
+              if [[ ! $PR_TITLE =~ ^($ALLOWED_PREFIXES)(\(.+\))?!?:.*$ ]]; then
+                echo "The PR title is invalid: $PR_TITLE"
+                echo "It must follow the conventional commit format." 
+                exit 1
+              fi
 
-        - name: Remove label
-          shell: bash
-          env:
-              GITHUB_TOKEN: ${{ github.token }}
-          run: gh pr edit --remove-label ${{ inputs.failed-pr-label }}
-
-        - name: Add label
-          if: ${{ failure() }}
-          shell: bash
-          env:
-              GITHUB_TOKEN: ${{ github.token }}
-          run: gh pr edit --add-label ${{ inputs.failed-pr-label }}
+              echo "The PR title follows the Conventional Commit format."
