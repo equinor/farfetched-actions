@@ -1,4 +1,5 @@
 name: Pull Request
+permissions: {}
 on:
     pull_request:
         branches:
@@ -7,6 +8,8 @@ on:
 jobs:
     code_style_issues:
         name: Code style issues
+        permissions:
+            contents: read
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
