@@ -1,0 +1,33 @@
+# Dependency Review Action
+# AppSec example: https://github.com/equinor/appsec-ghas-examples/blob/main/.github/workflows/dependency-review.yml
+#
+# Source repository: https://github.com/actions/dependency-review-action
+# Public documentation: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
+
+name: "Dependency review"
+permissions: {}
+
+on:
+    workflow_call:
+        inputs:
+            allowed-licenses:
+                description: "Comma-separated list of allowed licenses for dependencies. E.g. 'MIT, Apache-2.0, BSD-3-Clause'"
+                type: string
+                required: true
+
+jobs:
+    dependency-review:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            # Write permissions for pull-requests are required for using the `comment-summary-in-pr` option.
+            pull-requests: write
+        steps:
+            - name: "Dependency Review"
+              uses: actions/dependency-review-action@v4.8.2
+              # See https://github.com/actions/dependency-review-action#configuration-options for all available options.
+              with:
+                  comment-summary-in-pr: always
+                  allow-licenses: ${{ inputs.allowed-licenses }}
+                  fail-on-severity: moderate
+                  retry-on-snapshot-warnings: true
