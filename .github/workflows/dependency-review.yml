@@ -14,6 +14,10 @@ on:
                 description: "Comma-separated list of allowed licenses for dependencies. E.g. 'MIT, Apache-2.0, BSD-3-Clause'"
                 type: string
                 required: true
+            allow-dependencies-licenses:
+                description: "Comma-separated list of packages to allow. E.g. 'pkg:npm/@myorg/mypackage, pkg:npm/packagename, pkg:githubactions/owner/repo@2.0.0'"
+                type: string
+                required: false
 
 jobs:
     dependency-review:
@@ -29,5 +33,6 @@ jobs:
               with:
                   comment-summary-in-pr: always
                   allow-licenses: ${{ inputs.allowed-licenses }}
+                  allow-dependencies-licenses: ${{ inputs.allow-dependencies-licenses }}
                   fail-on-severity: moderate
                   retry-on-snapshot-warnings: true
