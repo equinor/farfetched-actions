@@ -9,11 +9,11 @@ runs:
           env:
               PR_TITLE: ${{ github.event.pull_request.title }}
           run: |
-              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build"
+              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert"
 
               echo "PR Title: $PR_TITLE"
 
-              if [[ ! "$PR_TITLE" =~ ^($ALLOWED_PREFIXES)(\(.+\))?!?:.*$ ]]; then
+              if [[ ! "$PR_TITLE" =~ ^($ALLOWED_PREFIXES)(\(.+\))?!?:.*$ && ! "$PR_TITLE" =~ ^Revert\ \".*\"$ ]]; then
                 echo "The PR title is invalid: $PR_TITLE"
                 echo "It must follow the conventional commit format." 
                 exit 1

@@ -14,7 +14,7 @@ runs:
         - name: Validate conventional commits
           shell: bash
           run: |
-              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build"
+              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert"
 
               # There is a hidden merge commit at the top that we bypass. The second child is the topmost PR commit.
               COMMIT_MESSAGES=$(git log origin/${{ github.event.pull_request.base.ref }}..HEAD^2 --pretty=format:'%s')
