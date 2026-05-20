@@ -9,7 +9,7 @@ runs:
           env:
               PR_TITLE: ${{ github.event.pull_request.title }}
           run: |
-              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build"
+              ALLOWED_PREFIXES="feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert"
 
               echo "PR Title: $PR_TITLE"
 
