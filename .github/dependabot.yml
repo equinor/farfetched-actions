@@ -1,16 +1,16 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directories:
-      - "/"
-      - "**/*"
-    commit-message:
-      prefix: "ci(actions)"
-    schedule:
-      interval: "daily"
-    groups:
-      github-actions:
-        patterns:
-          - "*"
-    reviewers:
-      - "equinor/farfetch-d"
+    - package-ecosystem: "github-actions"
+      directories:
+          - "/"
+          - "**/*"
+      commit-message:
+          prefix: "ci(actions)"
+      schedule:
+          interval: "daily"
+      groups:
+          github-actions:
+              patterns:
+                  - "*"
+      reviewers:
+          - "equinor/farfetch-d"
