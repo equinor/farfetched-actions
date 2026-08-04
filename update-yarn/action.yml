@@ -4,7 +4,7 @@ runs:
     using: "composite"
     steps:
         - name: Check out repository
-          uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
         - name: Install jq
           run: sudo apt-get install jq
@@ -63,7 +63,7 @@ runs:
 
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
-          uses: equinor/farfetched-actions/signed-commit-and-push@cb40c0d41f64e2761193326e5bba2942b4a297eb #v2.18
+          uses: equinor/farfetched-actions/signed-commit-and-push@a9f1d38738322226cca01b9343bd7d910517a6af #v2.19
           with:
               branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
               commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
