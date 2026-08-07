@@ -28,7 +28,7 @@ if ! [[ "$NEW_YARN_VERSION" =~ ^[A-Za-z0-9.+-]+$ ]]; then
   echo "Unexpected Yarn version format: '$NEW_YARN_VERSION'." >&2
   exit 1
 fi
-if ! [[ "$PACKAGE_JSON_PATH" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+if ! [[ "$PACKAGE_JSON_PATH" =~ ^[A-Za-z0-9@._/-]+$ ]]; then
   echo "Unexpected 'package.json' path: '$PACKAGE_JSON_PATH'." >&2
   exit 1
 fi
