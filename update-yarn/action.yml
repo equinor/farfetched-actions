@@ -1,5 +1,11 @@
 name: "Update Yarn"
 description: "Update Yarn to the latest version in package.json"
+inputs:
+    working-directory:
+        description: "The directory where 'package.json' resides, relative to the repository root."
+        type: string
+        required: false
+        default: "."
 runs:
     using: "composite"
     steps:
@@ -41,7 +47,8 @@ runs:
         - name: Update Yarn to the latest version
           if: ${{ success() && steps.check-pr-exists.outputs.UPDATE_PR_ALREADY_EXISTS == 'false' }}
           id: update-yarn
-          run: bash ${{ github.action_path }}/update-yarn.sh
+          working-directory: ${{ inputs.working-directory }}
+          run: bash "${{ github.action_path }}/update-yarn.sh"
           shell: bash
 
         - name: Create branch
@@ -68,7 +75,7 @@ runs:
               branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
               commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
               repo: ${{ github.repository }}
-              file-to-commit: "package.json"
+              file-to-commit: ${{ steps.update-yarn.outputs.PACKAGE_JSON_PATH }}
 
         - name: Create pull request
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
