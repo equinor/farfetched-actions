@@ -30,7 +30,7 @@ jobs:
                   sed -E -b -i "s/Last version check \`[0-9]{4}-[0-9]{2}-[0-9]{2}\`./Last version check \`$(date +%Y-%m-%d)\`./g" $SECURITY_DOC
 
             - name: Commit and push changes for security doc
-              uses: equinor/farfetched-actions/signed-commit-and-push@2b3ee04695f8998339b5b8a5d5c32aabc604bbdb #v2.20
+              uses: equinor/farfetched-actions/signed-commit-and-push@eae3afd788886cd36557c690695592d7040b0da1 #v2.21
               with:
                   branch: ${{ env.BRANCH }}
                   commit-message: "chore: governance docs version update"
@@ -38,7 +38,7 @@ jobs:
                   file-to-commit: ${{ env.SECURITY_DOC }}
 
             - name: Commit and push changes for compliance doc
-              uses: equinor/farfetched-actions/signed-commit-and-push@2b3ee04695f8998339b5b8a5d5c32aabc604bbdb #v2.20
+              uses: equinor/farfetched-actions/signed-commit-and-push@eae3afd788886cd36557c690695592d7040b0da1 #v2.21
               with:
                   branch: ${{ env.BRANCH }}
                   commit-message: "chore: governance docs version update"
