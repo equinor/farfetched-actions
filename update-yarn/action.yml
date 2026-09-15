@@ -2,7 +2,7 @@ name: "Update Yarn"
 description: "Update Yarn to the latest version in package.json"
 inputs:
     working-directory:
-        description: "The directory where 'package.json' resides, relative to the repository root."
+        description: "The directory to search for 'package.json' files in, relative to the repository root. All 'package.json' files below it that declare Yarn as their package manager are updated, except those inside 'node_modules' and '.yarn' directories."
         type: string
         required: false
         default: "."
@@ -70,12 +70,14 @@ runs:
 
         - name: Commit and push changes
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
-          uses: equinor/farfetched-actions/signed-commit-and-push@eae3afd788886cd36557c690695592d7040b0da1 #v2.21
-          with:
-              branch: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
-              commit-message: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
-              repo: ${{ github.repository }}
-              file-to-commit: ${{ steps.update-yarn.outputs.PACKAGE_JSON_PATH }}
+          shell: bash
+          env:
+              GH_TOKEN: ${{ github.token }}
+              BRANCH: "yarn-update-${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}"
+              COMMIT_MESSAGE: "chore: update Yarn to '${{ steps.update-yarn.outputs.NEW_YARN_VERSION }}'"
+              REPO: ${{ github.repository }}
+              PACKAGE_JSON_PATHS: ${{ steps.update-yarn.outputs.PACKAGE_JSON_PATHS }}
+          run: bash "${{ github.action_path }}/commit-and-push.sh"
 
         - name: Create pull request
           if: ${{ success() && steps.update-yarn.outputs.NEW_YARN_VERSION != '' }}
