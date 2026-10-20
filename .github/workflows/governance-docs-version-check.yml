@@ -50,4 +50,4 @@ jobs:
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
-                  gh pr create -t "chore(compliance): governing document version check" -b "Check for new versions of referenced governing documents in docs/compliance. Create work item in Azure DevOps to perform review of changes and commit update of COMPLIANCE.md and SECURITY.md for new versions of governing documents to this PR."
+                  gh pr create -t "chore(compliance): governing document version check" -b "Check for new versions of referenced governing documents in docs/compliance. Create an issue in the team project repo to perform review of changes and commit update of COMPLIANCE.md and SECURITY.md for new versions of governing documents to this PR."
